@@ -88,13 +88,13 @@ def export_obj(data, model, bin_file, filename):
     scale = 1.0
     #WRITE OBJ VERTS, NORMALS, COORDINATES
     for vertex in model["vertices"]:
-        obj_file.write("v " + str(get_raw(vertex["x"], bin_file)*scale) + " " + str(-get_raw(vertex["y"], bin_file)*scale) + " " + str(get_raw(vertex["z"], bin_file)*scale) + "\n")
+        obj_file.write("v " + str(get_raw(vertex["x"], bin_file)*scale) + " " + str(get_raw(vertex["y"], bin_file)*scale) + " " + str(-get_raw(vertex["z"], bin_file)*scale) + "\n")
 
     for text_coord in model["coordinates"]:
         obj_file.write("vt " + str(((get_raw(text_coord["u"], bin_file)*scale)-scale)/scale) + " " + str(((-get_raw(text_coord["v"], bin_file)*scale)-scale)/scale) + "\n")
 
     for normal in model["normals"]:
-        obj_file.write("vn " + str(get_raw(normal["x"], bin_file)*scale) + " " + str(-get_raw(normal["y"], bin_file)*scale) + " " + str(get_raw(normal["z"], bin_file)*scale) + "\n")
+        obj_file.write("vn " + str(-get_raw(normal["x"], bin_file)*scale) + " " + str(get_raw(normal["y"], bin_file)*scale) + " " + str(-get_raw(normal["z"], bin_file)*scale) + "\n")
 
 
     #INTERPRET AND WRITE INDICES
@@ -163,7 +163,7 @@ def export_obj(data, model, bin_file, filename):
 
 
         #WRITE INDICES TO OBJ
-        obj_file.write("o " + str(part_index) + "\n")
+        obj_file.write("g " + str(part_index) + "\n")
 
         #try to use texture_name, otherwise material_name
         if texture_name == "":
@@ -203,16 +203,20 @@ def export_mtl(data, path, bin_file):
 
     for material in MATERIALS:
         file.write("newmtl " + str(material) + "\n")
-        file.write("Ns 0\n")
-        file.write("Ka 0.0\n")
-        file.write("Kd 1.0\n")
-        file.write("Ks 0.0\n")
-        file.write("d 1\n")
+        file.write("Ns 500\n")
+        file.write("Ka 1.0 1.0 1.0\n")
+        file.write("Kd " + str(MATERIALS[material][0]/255) + " " + str(MATERIALS[material][1]/255) + " " + str(MATERIALS[material][2]/255) + "\n")
+        if ("LEGO" in material or "PHONG" in material) and not ("CLR" in material or "FLAT" in material or "FLT" in material):
+            file.write("Ks 1.0 1.0 1.0\n")
+        else:
+            file.write("Ks 0.0 0.0 0.0\n")
+        if "CLR" in material:
+            file.write("d 0.6\n")
         file.write("illum 2\n")
 
-        file.write("map_Ka " + str(material) + ".png\n")
+        #file.write("map_Ka " + str(material) + ".png\n")
         file.write("map_Kd " + str(material) + ".png\n")
-        file.write("map_Ks " + str(material) + ".png\n")
+        #file.write("map_Ks " + str(material) + ".png\n")
 
     file.close()
 
@@ -243,8 +247,9 @@ def export_gif(image, path, bin_file, pretext=""):
         for pixel in row["pixels"]:
             color_index = get_raw(pixel["color_index"], bin_file)
             c = colors[color_index]
-            for i in range(3):
-                rows[y].append(c[i])
+            #for i in range(3):
+            #    rows[y].append(c[i])
+            rows[y].append(color_index)
 
             x += 1
         y += 1
@@ -252,7 +257,7 @@ def export_gif(image, path, bin_file, pretext=""):
     #write png
     f = open(path + "/" + pretext + gif_name[:-4] + ".png", "wb")
     f.truncate()
-    w = png.Writer(width, height)
+    w = png.Writer(width, height, greyscale = False, palette = colors)
     w.write(f, rows)
     f.close()
 
@@ -472,8 +477,8 @@ def extract_pattern(file_path, pattern):
                         rows[row].append(c[2])
                 f = open(obj_path + "/" + material + ".png", "wb")
                 f.truncate()
-                w = png.Writer(4, 4)
-                w.write(f, rows)
+                w = png.Writer(4, 4, greyscale = False)
+                w.write_packed(f, rows)
                 f.close()
 
 
