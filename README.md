@@ -8,7 +8,7 @@ As of now, 451 out of 592 .bin files can be extracted!
 
 ## Requirements:
  * Python 3 https://www.python.org/downloads/
- * PyPNG https://pythonhosted.org/pypng/index.html
+ * PyPNG https://pypi.org/project/pypng/
 
 ## Usage:
  * Run the executable:
