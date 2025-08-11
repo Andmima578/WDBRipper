@@ -1,3 +1,6 @@
+This is a fork of WDBRipper by LiamBrandt.
+This fork adds quality of life changes like fixing the upside down models, more accurate to the game materials and even 8 bit palettes of every image!
+
 # WDBRipper
 
 Extracts the 3D models and textures from the Lego Island WORLD.WDB file.
