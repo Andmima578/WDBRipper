@@ -94,7 +94,7 @@ def export_obj(data, model, bin_file, filename):
         obj_file.write("vt " + str(((get_raw(text_coord["u"], bin_file)*scale)-scale)/scale) + " " + str(((-get_raw(text_coord["v"], bin_file)*scale)-scale)/scale) + "\n")
 
     for normal in model["normals"]:
-        obj_file.write("vn " + str(-get_raw(normal["x"], bin_file)*scale) + " " + str(get_raw(normal["y"], bin_file)*scale) + " " + str(-get_raw(normal["z"], bin_file)*scale) + "\n")
+        obj_file.write("vn " + str(get_raw(normal["x"], bin_file)*scale) + " " + str(get_raw(normal["y"], bin_file)*scale) + " " + str(-get_raw(normal["z"], bin_file)*scale) + "\n")
 
 
     #INTERPRET AND WRITE INDICES
@@ -173,6 +173,8 @@ def export_obj(data, model, bin_file, filename):
 
         for each_triangle in triangles:
             obj_file.write("f ")
+            each_triangle[0].reverse()
+            each_triangle[2].reverse()
             #three iterations for 3 points in a triangle, NOT 3 dimensions (x,y,z)!
             for i in range(3):
                 #make sure there are texture coordinates
@@ -206,7 +208,7 @@ def export_mtl(data, path, bin_file):
         file.write("Ns 500\n")
         file.write("Ka 1.0 1.0 1.0\n")
         file.write("Kd " + str(MATERIALS[material][0]/255) + " " + str(MATERIALS[material][1]/255) + " " + str(MATERIALS[material][2]/255) + "\n")
-        if ("LEGO" in material or "PHONG" in material) and not ("CLR" in material or "FLAT" in material or "FLT" in material):
+        if ("LEGO" in material or "PHONG" in material) and not ("CLR" in material or "FLAT" in material or "FLT" in material or "FLA" in material):
             file.write("Ks 1.0 1.0 1.0\n")
         else:
             file.write("Ks 0.0 0.0 0.0\n")
@@ -478,7 +480,7 @@ def extract_pattern(file_path, pattern):
                 f = open(obj_path + "/" + material + ".png", "wb")
                 f.truncate()
                 w = png.Writer(4, 4, greyscale = False)
-                w.write_packed(f, rows)
+                w.write(f, rows)
                 f.close()
 
 
