@@ -14,14 +14,7 @@ As of now, 451 out of 592 .bin files can be extracted!
  * PyPNG https://pypi.org/project/pypng/
 
 ## Usage:
- * Run the executable:
-
- ```
- wdb_ripper.exe
- ```
-
- * Or run the python script:
-
+ * Run the python script:
  ```
  python wdb_ripper.py
  ```
@@ -39,4 +32,3 @@ More information on the format of `WORLD.WDB` can be found in `./formats/wdb`, t
    * **`wdb_ripper.py`** is the main program that takes data read from the bin files, and exports it as .obj, .mtl, and .gif.
    * **`formatter.py`** reads the file `./formats/wdb` and uses it to interpret the data found in `WORLD.WDB` and the .bin files. It hands `wdb_ripper.py` a dictionary containing the structure of the files as described in `./formats/wdb`.
    * **`bin_decode3.py`** is a helpful tool to visualize what is going on inside a .bin file in terms of the format of data. It uses `formatter.py` to display the values of each piece of data in the file. You need pygame to run this.
-   * **`color_console.py`** does not play a role, it was for debug purposes to help make the console output of `formatter.py` more readable. It was taken from an online example.
